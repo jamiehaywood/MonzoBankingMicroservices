@@ -1,0 +1,15 @@
+{
+  "name": "MonzoTokenRefreshService",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "azure-storage": "^2.10.3",
+    "jest": "^24.8.0",
+    "ms-rest-azure": "^2.6.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {}
+}
