@@ -13,7 +13,7 @@ module.exports = async function (context, req) {
             var query = new azure.TableQuery().top(5);
 
             return new Promise((res, rej) => {
-                tableService.queryEntities('credentials', query, null, function (error, result, response) {
+                tableService.queryEntities(process.env["tableName"], query, null, function (error, result, response) {
 
                     if (!error) {
                         var credentialObject = {};
@@ -51,6 +51,7 @@ module.exports = async function (context, req) {
                         var newCredentials = JSON.parse(body)
                         res(newCredentials)
                         console.log("Monzo token refresh successful")
+                        console.log(newCredentials.refresh_token)
                     }
                     else {
                         rej(error)
@@ -60,14 +61,47 @@ module.exports = async function (context, req) {
             })
         }
 
+        // Update the storage table with new credentials
+        async function credentialsStorer(refreshedCredentials) {
+            return new Promise((res, rej) => {
+                var batch = new azure.TableBatch();
+                
+                var newRefreshToken = {
+                    PartitionKey: entGen.String(process.env["refreshTokenPartitionKey"]),
+                    RowKey: entGen.String(process.env["refreshTokenRowKey"]),
+                    value: entGen.String(refreshedCredentials.refresh_token),
+                }
+                var newAccessToken = {
+                    PartitionKey: entGen.String(process.env["accessTokenPartitionKey"]),
+                    RowKey: entGen.String(process.env["accessTokenRowKey"]),
+                    value: entGen.String(refreshedCredentials.refresh_token),
+                }
+
+                batch.replaceEntity(newRefreshToken, { echoContent: true });
+                batch.replaceEntity(newAccessToken, { echoContent: true });
+                
+                tableService.executeBatch(process.env["tableName"], batch, function (error, result, response) {
+                    if (!error) {
+                        res(response.statusCode)
+                        console.log(response.statusCode + ": " + "Successfully written refreshed credentials to table")
+                        console.log("")
+                    }
+                    else {
+                        console.log(response)
+                        rej(error)
+                    }
+                });
+            })
+        }
 
         let existingCredentials = await credentialsRetriever()
         let refreshedCredentials = await credentialsRefresher(existingCredentials)
+        let finalResponse = await credentialsStorer(refreshedCredentials)
 
-        if (refreshedCredentials) {
+        if (finalResponse === 200 || 202) {
             context.res = {
                 status: 200,
-                body: refreshedCredentials
+                body: "job's a good'un"
             }
         }
         else {
