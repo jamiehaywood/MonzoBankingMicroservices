@@ -8,7 +8,7 @@ module.exports = async function (context, req) {
     if (req.body) {
 
         // Fetch existing credentials from the storage table
-        export async function credentialsRetriever() {
+        async function credentialsRetriever() {
 
             var query = new azure.TableQuery().top(5);
 
@@ -31,12 +31,43 @@ module.exports = async function (context, req) {
             })
         };
 
-        let existingCredentials = await credentialsRetriever()
+        // Make a POST to Monzo to refresh the credentials
+        async function credentialsRefresher(existingCredentials) {
+            var options = {
+                method: 'POST',
+                url: 'https://api.monzo.com/oauth2/token',
+                formData:
+                {
+                    grant_type: 'refresh_token',
+                    client_id: await existingCredentials.clientID,
+                    client_secret: await existingCredentials.clientSecret,
+                    refresh_token: await existingCredentials.refreshToken
+                }
+            };
 
-        if (existingCredentials) {
+            return new Promise((res, rej) => {
+                request(options, function (error, response, body) {
+                    if (response.statusCode === 200) {
+                        var newCredentials = JSON.parse(body)
+                        res(newCredentials)
+                        console.log("Monzo token refresh successful")
+                    }
+                    else {
+                        rej(error)
+                        console.log(response.statusMessage)
+                    }
+                });
+            })
+        }
+
+
+        let existingCredentials = await credentialsRetriever()
+        let refreshedCredentials = await credentialsRefresher(existingCredentials)
+
+        if (refreshedCredentials) {
             context.res = {
                 status: 200,
-                body: existingCredentials
+                body: refreshedCredentials
             }
         }
         else {
