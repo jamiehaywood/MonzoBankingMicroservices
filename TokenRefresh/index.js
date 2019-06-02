@@ -1,15 +1,12 @@
-module.exports = async function (context, req) {
+module.exports = async function (context, myTimer) {
     var azure = require('azure-storage');
     var request = require("request");
     var entGen = azure.TableUtilities.entityGenerator;
 
     var tableService = azure.createTableService(process.env["storageName"], process.env["storageAccessKey"])
 
-    if (req.body) {
-
         // Fetch existing credentials from the storage table
         async function credentialsRetriever() {
-
             var query = new azure.TableQuery().top(5);
 
             return new Promise((res, rej) => {
@@ -21,7 +18,7 @@ module.exports = async function (context, req) {
                             credentialObject[item.RowKey] = item.value
                         })
                         res(credentialObject)
-                        console.log("Credentials successfully retrieved from table")
+                        context.log("Credentials successfully retrieved from table")
                     }
                     else {
                         rej(error)
@@ -50,12 +47,11 @@ module.exports = async function (context, req) {
                     if (response.statusCode === 200) {
                         var newCredentials = JSON.parse(body)
                         res(newCredentials)
-                        console.log("Monzo token refresh successful")
-                        console.log(newCredentials.refresh_token)
+                        context.log("Monzo token refresh successful")
                     }
                     else {
                         rej(error)
-                        console.log(response.statusMessage)
+                        context.log(response.statusMessage)
                     }
                 });
             })
@@ -83,11 +79,10 @@ module.exports = async function (context, req) {
                 tableService.executeBatch(process.env["tableName"], batch, function (error, result, response) {
                     if (!error) {
                         res(response.statusCode)
-                        console.log(response.statusCode + ": " + "Successfully written refreshed credentials to table")
-                        console.log("")
+                        context.log(response.statusCode + ": " + "Successfully written refreshed credentials to table")
                     }
                     else {
-                        console.log(response)
+                        context.log(response)
                         rej(error)
                     }
                 });
@@ -97,19 +92,5 @@ module.exports = async function (context, req) {
         let existingCredentials = await credentialsRetriever()
         let refreshedCredentials = await credentialsRefresher(existingCredentials)
         let finalResponse = await credentialsStorer(refreshedCredentials)
-
-        if (finalResponse === 200 || 202) {
-            context.res = {
-                status: 200,
-                body: "job's a good'un"
-            }
-        }
-        else {
-            context.res = {
-                status: 400,
-                body: "houston, we've had a problem."
-            };
-
-        }
-    }
+        context.log(finalResponse)
 }
