@@ -3,7 +3,7 @@
   <img src="./RefreshArchitecture.png" width=70% alt="architecture diagram">
 </p>
 
-#### Rationale
+## Rationale
 
 Based on OAuth best practice, [Monzo Bank API](https://docs.monzo.com/) access tokens expire after a number of hours. 
 
