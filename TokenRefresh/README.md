@@ -1,6 +1,7 @@
 ## Architecture diagram
-<img src="./RefreshArchitecture.png" width=70% alt="architecture diagram">
-
+<p align="center">
+  <img src="./RefreshArchitecture.png" width=70% alt="architecture diagram">
+</p>
 
 #### Rationale
 
