@@ -1,31 +1,32 @@
 module.exports = async function (context, myTimer) {
-    var request = require("request");
-    const stocks = require('../StockChecker/stocks.json')
+    const stocks = require('../StockChecker/stocks.json');
+    const iex = require('iexcloud_api_wrapper');
 
-    getStockClosePrice(stocks)
+    const changeToday = await getTotalDayChange()
+    console.log(changeToday)
 
-    async function getStockClosePrice(stocks) {
-        let todaysStockPrices = []
+    async function getTotalDayChange() {
+        let dayChanges = []
+        const quotes = await getTodaysStockQuotes(stocks)
 
+        for (const stock in quotes) {
+            if (quotes.hasOwnProperty(stock)) {
+                const element = quotes[stock];
+                dayChanges.push(element.changePercent)
+            }
+        }
+        let totalChange = dayChanges.reduce((a, b) => a + b, 0)*100
+        return totalChange/Object.keys(quotes).length;
+    }
+
+    async function getTodaysStockQuotes(stocks) {
         var stockTickers = stocks.map(x => x.ticker)
+        let todaysStockQuotes = {}
 
         for (const ticker of stockTickers) {
-            var options = {
-                method: 'GET',
-                url: 'https://cloud.iexapis.com/stable/stock/' + ticker + '/ohlc',
-                qs: {
-                    token: process.env["iexAPIKey"]
-                    },
-            };
-            let closePrice = await new Promise((res, rej) => {
-                request(options, function (error, response, body) {
-                    console.log(body)
-                    rej(error)
-                    res(response.close.price)
-                })
-            });
-            todaysStockPrices.push(closePrice)
+            const quoteData = await iex.quote(ticker);
+            todaysStockQuotes[ticker] = quoteData
         }
+        return todaysStockQuotes
     }
-    context.done()
 }
