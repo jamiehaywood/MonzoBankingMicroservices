@@ -70,7 +70,7 @@ module.exports = async function (context, myTimer) {
                 var newAccessToken = {
                     PartitionKey: entGen.String(process.env["accessTokenPartitionKey"]),
                     RowKey: entGen.String(process.env["accessTokenRowKey"]),
-                    value: entGen.String(refreshedCredentials.refresh_token),
+                    value: entGen.String(refreshedCredentials.access_token),
                 }
 
                 batch.replaceEntity(newRefreshToken, { echoContent: true });
