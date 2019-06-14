@@ -1,8 +1,20 @@
 module.exports = async function getTotalDayChange() {
-    const getTodaysStockQuotes = require('./getTodaysStockQuotes')
+    let iex = require('iexcloud_api_wrapper')
+    const stocks = require('./stocks.json')
+    
+    const quotes = await (async () => {
+    
+        var stockTickers = stocks.map(x => x.ticker)
+        let todaysStockQuotes = {}
+    
+        for (const ticker of stockTickers) {
+            const quoteData = await iex.quote(ticker);
+            todaysStockQuotes[ticker] = quoteData
+        }
+        return todaysStockQuotes
+    })()
 
     let dayChanges = []
-    const quotes = await getTodaysStockQuotes()
 
     for (const stock in quotes) {
         if (quotes.hasOwnProperty(stock)) {
