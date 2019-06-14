@@ -9,6 +9,7 @@
     "azure-storage": "^2.10.3",
     "iexcloud_api_wrapper": "^1.1.3",
     "jest": "^24.8.0",
+    "moment": "^2.24.0",
     "ms-rest-azure": "^2.6.0",
     "request": "^2.88.0"
   },
