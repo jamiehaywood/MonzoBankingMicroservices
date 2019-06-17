@@ -10,9 +10,11 @@ module.exports = async function checkBankHolidays() {
         };
 
         request(options, function (error, response, body) {
-            if (error) throw new Error(error);
+            if (error){
+                rej(error)
+                throw new Error(error);
+            } 
             res(body)
-            rej(error)
         })
     });
     
