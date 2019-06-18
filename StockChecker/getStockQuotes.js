@@ -10,10 +10,11 @@ module.exports = async function getStockQuotes() {
         return rp(options);
     });
 
-    const temp = await Promise.all(requestPromiseArray);
+    const quotes = await Promise.all(requestPromiseArray);
 
     let keys = stocks.map(x => x.name);
     let result = {};
-    keys.forEach((key, i) => result[key] = temp[i]);
+    keys.forEach((key, i) => result[key] = quotes[i]);
+
     return result
 }
