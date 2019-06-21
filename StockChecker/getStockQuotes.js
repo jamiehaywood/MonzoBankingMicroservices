@@ -5,7 +5,8 @@ module.exports = async function getStockQuotes() {
     let requestPromiseArray = stocks.map(x => {
         let options = {
             method: 'GET',
-            url: 'https://www.stockopedia.com/ajax/get_prices/' + x.stockopediaTicker + '/'
+            url: 'https://www.stockopedia.com/ajax/get_prices/' + x.stockopediaTicker + '/',
+            json: true
         };
         return rp(options);
     });
