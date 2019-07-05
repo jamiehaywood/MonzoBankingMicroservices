@@ -12,6 +12,7 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
+    "@types/jest": "^24.0.15",
     "@types/request": "^2.48.1",
     "@types/request-promise": "^4.1.44",
     "moment": "^2.24.0",
