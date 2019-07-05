@@ -1,8 +1,8 @@
-module.exports = async function checkBankHolidays() {
-    var request = require('request');
-    var moment = require('moment');
+import request from 'request';
+import moment from 'moment';
 
-    let body = await new Promise<Object>((res, rej) => {
+const bankHolidayCheck: Function = async function (): Promise<Boolean> {
+    let body = await new Promise<IHolidayEvent[]>((res, rej) => {
 
         var options = {
             method: 'GET',
@@ -11,22 +11,24 @@ module.exports = async function checkBankHolidays() {
         };
 
         request(options, function (error, response, body) {
-            if (!error && response === 200) {
-                rej(error)
-                throw new Error(error);
+            if (!error && response.statusCode === 200) {
+                res(body["england-and-wales"].events)
             }
-            res(body)
+            else {
+                rej(error)
+                throw new Error
+            }
         })
     });
 
-    let holidays = await body["england-and-wales"].events
+    let bankHolidayDates: Array<String> = body.map(x => x.date)
 
-    let bankHolidayDates:Array<string> = holidays.map((x:any) => (x.date)) // how do I use the map function with TypeScript and make it look nice/not throw errors
-
-    if (bankHolidayDates.includes(moment().format('YYYY-MM-DD'))) {
-        return true
+    if (bankHolidayDates.includes(moment().format('YYYY-MM-DD').valueOf())) {
+        return true;
     }
     else {
-        return false
+        return false;
     }
-}
+};
+
+export default bankHolidayCheck;
