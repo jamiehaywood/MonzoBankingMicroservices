@@ -1,7 +1,7 @@
 {
-  "name": "BankingMicroservices",
+  "name": "MonzoBankingMicroservices",
   "version": "1.0.0",
-  "description": "",
+  "description": "Placeholder for an explanation of the wider architecture",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -15,6 +15,7 @@
     "@types/jest": "^24.0.15",
     "@types/request": "^2.48.1",
     "@types/request-promise": "^4.1.44",
+    "azure-storage": "^2.10.3",
     "moment": "^2.24.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
