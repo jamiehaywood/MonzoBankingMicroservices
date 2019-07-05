@@ -1,7 +1,7 @@
-module.exports = async function getStockQuotes() {
-    const stocks = require('./stocks.json')
-    const rp = require("request-promise")
+import rp from 'request-promise'
+import stocks from '../StockChecker/stocks.json'
 
+const getStockQuotes = async function (): Promise<IStockQuotes> {
     let requestPromiseArray = stocks.map(x => {
         let options = {
             method: 'GET',
@@ -14,8 +14,10 @@ module.exports = async function getStockQuotes() {
     const quotes = await Promise.all(requestPromiseArray);
 
     let keys = stocks.map(x => x.name);
-    let result = {};
+    let result = {} as IStockQuotes
     keys.forEach((key, i) => result[key] = quotes[i]);
-
+    
     return result
 }
+
+export default getStockQuotes
