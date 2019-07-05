@@ -4,3 +4,7 @@ interface IHolidayEvent {
     "notes": String,
     "bunting": true
 }
+
+interface IStockQuotes {
+    company: number[][];
+}
