@@ -2,13 +2,12 @@ import { AzureFunction, Context } from '@azure/functions';
 import * as azure from 'azure-storage';
 import request from 'request'
 
-const timerTrigger: AzureFunction = async function (context: Context, myTimer: any): Promise<void> {
+const timerTrigger: AzureFunction = async function (context: Context): Promise<void> {
 
     var entGen = azure.TableUtilities.entityGenerator;
 
     var tableService = azure.createTableService(process.env["storageName"], process.env["storageAccessKey"])
 
-    // Fetch existing credentials from the storage table
     async function credentialsRetriever() {
         var query = new azure.TableQuery().top(5);
 
@@ -16,8 +15,10 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
             tableService.queryEntities(process.env["tableName"], query, null, function (error, result, response) {
 
                 if (!error) {
-                    var credentialObject = {};
-                    response.body
+                    var credentialObject = {} as ICredentialsObject;
+                    response.body["value"].map(item => {
+                        credentialObject[item.RowKey] = item.value
+                    })
                     res(credentialObject)
                     context.log("Credentials successfully retrieved from table")
                 }
@@ -29,12 +30,11 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
         })
     };
 
-    // Make a POST to Monzo to refresh the credentials
     async function credentialsRefresher(existingCredentials) {
         var options = {
             method: 'POST',
             url: 'https://api.monzo.com/oauth2/token',
-            formData:
+            form:
             {
                 grant_type: 'refresh_token',
                 client_id: await existingCredentials.clientID,
@@ -58,11 +58,9 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
         })
     }
 
-    // Update the storage table with new credentials
     async function credentialsStorer(refreshedCredentials) {
         return new Promise((res, rej) => {
             var batch = new azure.TableBatch();
-
             var newRefreshToken = {
                 PartitionKey: entGen.String(process.env["refreshTokenPartitionKey"]),
                 RowKey: entGen.String(process.env["refreshTokenRowKey"]),
@@ -95,3 +93,5 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
     let finalResponse = await credentialsStorer(refreshedCredentials)
     context.log(finalResponse)
 }
+
+export default timerTrigger;
