@@ -1,5 +1,6 @@
 import epochConstructor from './epochConstructor'
 import moment from 'moment'
+import stocks from './stocks.json'
 
 const getPercentageChanges = function (quotes: IStockQuotes): object {
     let epochValues: IEpochValues = {
@@ -20,8 +21,11 @@ const getPercentageChanges = function (quotes: IStockQuotes): object {
             var epochValue = epochValues[timePeriod];
             var foundValue = quotes[company].find(i => i[0] == epochValue);
             let period = foundValue.pop()
-            let todaysQuote = quotes[company][quotes[company].length - 1];
-            constructorObject[timePeriod] = (todaysQuote[1] - period) / period * 100;
+            let todaysQuote = quotes[company][quotes[company].length - 1][1];
+            constructorObject[timePeriod] = (todaysQuote - period) / period * 100;
+
+            let purchasePrice = stocks.find(i => i.name == company).averagePurchasePrice
+            constructorObject["totalChange"] = (todaysQuote - purchasePrice) / purchasePrice * 100;
             percentageChanges[company] = constructorObject
         }
     }
