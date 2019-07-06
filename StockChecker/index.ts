@@ -2,7 +2,7 @@ import { AzureFunction, Context } from "@azure/functions"
 import bankHolidayCheck from "./bankHolidayCheck"
 import getStockQuotes from "./getStockQuotes";
 
-const timerTrigger: AzureFunction = async function (context: Context, myTimer: any): Promise<void> {
+const timerTrigger: AzureFunction = async function (): Promise<void> {
     if (await bankHolidayCheck() === false) {
         const quotes = await getStockQuotes()
     }
