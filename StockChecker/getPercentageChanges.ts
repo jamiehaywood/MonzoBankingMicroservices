@@ -3,6 +3,9 @@ import moment from 'moment'
 import stocks from './stocks.json'
 
 const getPercentageChanges = function (quotes: IStockQuotes): IPercentageChanges | Error {
+    var isWeekend = ([0, 6].indexOf(new Date().getDay()) != -1);
+    if (isWeekend) { return new Error("You can't check the stocks at the weekend!") }
+
     let epochValues: IEpochValues = {
         day: epochConstructor(1),
         week: epochConstructor(7),
