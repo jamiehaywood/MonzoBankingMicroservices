@@ -17,11 +17,15 @@ interface IEpochValues {
     "year": number
 }
 
+interface Company {
+    day: number;
+    week: number;
+    month: number;
+    ytd: number;
+    year: number;
+}
+
+
 interface IPercentageChanges {
-    "day": number,
-    "week": number,
-    "month": number,
-    "year": number,
-    "ytd": number,
-    "sincePurchase": number
+    string: Company
 }
