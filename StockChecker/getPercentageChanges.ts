@@ -2,7 +2,7 @@ import epochConstructor from './epochConstructor'
 import moment from 'moment'
 import stocks from './stocks.json'
 
-const getPercentageChanges = function (quotes: IStockQuotes): object {
+const getPercentageChanges = function (quotes: IStockQuotes): IPercentageChanges | Error {
     let epochValues: IEpochValues = {
         day: epochConstructor(1),
         week: epochConstructor(7),
