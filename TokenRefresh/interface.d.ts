@@ -3,6 +3,8 @@ interface ICredentialsObject {
     clientID: string
     clientSecret: string
     refreshToken: string
+    accountId?: string
+    accountType?: string
 }
 
 interface IRefreshedCredentials {
