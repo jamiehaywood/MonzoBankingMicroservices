@@ -1,13 +1,25 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+import { ITransactionCreated, Merchant, ITransactionData } from "./interface";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    context.log('HTTP trigger function processed a request.');
-    const name = (req.query.name || (req.body && req.body.name));
 
-    if (name) {
+    const requestData: ITransactionData = req.body.data;
+
+    if (requestData) {
+        switch (requestData.merchant.name || requestData.description) {
+            case "TFL SALARY":
+                const savingsPercentage: number = + process.env["savingsAmount"]
+                const savingsAmount = requestData.amount * savingsPercentage
+                // request to potmover
+                break;
+
+            default:
+                break;
+        }
+
         context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
+            status: 200,
+            body: "webhook processed"
         };
     }
     else {
