@@ -5,7 +5,7 @@ import credentialsRetriever from '../TokenRefresh/credentialsRetriever'
 const MonzoFeedGenerator: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const body: IRequestBody = (req.body);
 
-    if (body) {
+    if (body.title && body.imageUrl) {
         let credentials = await credentialsRetriever()
         let accessToken = credentials.accessToken
 
@@ -39,7 +39,7 @@ const MonzoFeedGenerator: AzureFunction = async function (context: Context, req:
 
         context.res = {
             status: 202, // for an async response.
-            body: "Hello " + (req.query.name || req.body.name)
+            body: "Posted to feed"
         };
     }
     else {
