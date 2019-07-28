@@ -3,7 +3,7 @@ import * as azure from 'azure-storage';
 const credentialsRetriever = async function (): Promise<ICredentialsObject> {
     var tableService = azure.createTableService(process.env["storageName"], process.env["storageAccessKey"])
 
-    var query = new azure.TableQuery().top(5);
+    var query = new azure.TableQuery().top(6);
 
     return new Promise((res, rej) => {
         tableService.queryEntities(process.env["tableName"], query, null, function (error, result, response) {
