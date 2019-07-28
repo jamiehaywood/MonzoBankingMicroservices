@@ -3,7 +3,7 @@ interface ICredentialsObject {
     clientID: string
     clientSecret: string
     refreshToken: string
-    accountId?: string
+    accountID?: string
     accountType?: string
 }
 
