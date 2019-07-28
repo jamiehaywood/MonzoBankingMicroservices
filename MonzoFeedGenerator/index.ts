@@ -7,20 +7,18 @@ const MonzoFeedGenerator: AzureFunction = async function (context: Context, req:
 
     if (body.title && body.imageUrl) {
         let credentials = await credentialsRetriever()
-        let accessToken = credentials.accessToken
 
         var options = {
             method: 'POST',
             url: 'https://api.monzo.com/feed',
             headers:
             {
-                Authorization: accessToken,
-                "Content-Type": 'application/x-www-form-urlencoded'
+                Authorization: "Bearer " + credentials.accessToken,
             },
             form:
             {
-                account_id: credentials.accountId,
-                type: credentials.accountType,
+                account_id: credentials.accountID,
+                type: "basic",
                 url: body.url,
                 'params[title]': body.title,
                 'params[image_url]': body.imageUrl,
@@ -32,20 +30,20 @@ const MonzoFeedGenerator: AzureFunction = async function (context: Context, req:
         };
 
         request(options, function (error, response, body) {
-            if (error) throw new Error(error);
-
-            console.log(body);
+            if (!error && response.statusCode === 200) {
+                console.log("Successfully wrote to feed");
+            }
         });
 
         context.res = {
-            status: 202, // for an async response.
+            status: 202,
             body: "Posted to feed"
         };
     }
     else {
         context.res = {
             status: 400,
-            body: "Please pass a name on the query string or in the request body"
+            body: "There was an error posting to the feed."
         };
     }
 };
