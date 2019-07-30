@@ -3,9 +3,9 @@ import request from 'request'
 import credentialsRetriever from '../TokenRefresh/credentialsRetriever'
 
 const MonzoFeedGenerator: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    const body: IRequestBody = (req.body);
+    const body: IRequestBody = req.body
 
-    if (body.title && body.imageUrl) {
+    if (body) {
         let credentials = await credentialsRetriever()
 
         var options = {
@@ -30,22 +30,23 @@ const MonzoFeedGenerator: AzureFunction = async function (context: Context, req:
         };
 
         request(options, function (error, response, body) {
-            if (!error && response.statusCode === 200) {
+            if (!error && response.statusCode == 200) {
+                context.res = {
+                    status: 202,
+                    body: "Successfully wrote to feed"
+                };
                 console.log("Successfully wrote to feed");
+            }
+            else {
+                context.res = {
+                    status: 400,
+                    body: "There was an error posting to the feed."
+                };
+                console.log(response.statusCode)
             }
         });
 
-        context.res = {
-            status: 202,
-            body: "Posted to feed"
-        };
     }
-    else {
-        context.res = {
-            status: 400,
-            body: "There was an error posting to the feed."
-        };
-    }
-};
+}
 
 export default MonzoFeedGenerator;
