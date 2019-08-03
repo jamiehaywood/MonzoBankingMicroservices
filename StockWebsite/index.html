@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,500,700&display=swap" rel="stylesheet">
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Hello World</title>
+</head>
+<style>
+    body {
+        background-color: #ffffff;
+        font-family: Roboto;
+        margin: 0;
+        display: grid;
+    }
+
+    .title {
+        text-align: center;
+        font-family: Roboto, sans-serif;
+        font-size: 40px;
+        color: #0A2953;
+        padding: 20px;
+        font-weight: 700
+    }
+
+    .box {
+        background: #F7FAFF;
+        border-radius: 8px;
+        height: 60px;
+        width: 100%;
+        max-width: 600px;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .super {
+        font-size: 20px
+    }
+
+    .container {
+        display: table
+    }
+
+    .column {
+        float: left;
+        width: 33%;
+    }
+
+    .percentagechange {
+        color: green;
+    }
+
+    .holdingnumber {
+        color: #677A93;
+    }
+
+    .subtitle {
+        font-weight: 400;
+        color: #A0ABB7;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    tr {
+        vertical-align: middle;
+    }
+
+    table {
+        border-collapse: unset;
+        border-spacing: 0px;
+    }
+
+    table tr:nth-child(1) {
+        background: #ffffff !important
+    }
+
+    table tr:nth-child(2) {
+        background: #ffffff !important
+    }
+
+    table tr:nth-child(2n+2) {
+        background: #F7FAFF;
+    }
+</style>
+
+<body>
+    <table>
+        <tr>
+            <td colspan="3" class="title">£25,183<sup class="super">.25</sup></td>
+        </tr>
+        <tr>
+            <th class="subtitle">Asset</th>
+            <th class="subtitle">Holding</th>
+            <th class="subtitle">Change</th>
+        </tr>
+        <tr>
+            <td rowspan="2">
+                <img src="https://pbs.twimg.com/profile_images/1139187094658723840/CYMi6tPX_400x400.jpg"
+                    style="vertical-align: middle; border-radius: 50%" width="50px" />
+                Hargreaves Lansdown
+                </div>
+            </td>
+            <td class=holding> £2,453.26</td>
+            <td class=change>£11.78</td>
+        </tr>
+        <tr>
+            <td class=holdingnumber>149</td>
+            <td id=percentchange>⬆ 0.5%</td>
+        </tr>
+
+    </table>
+</body>
+
+</html>
