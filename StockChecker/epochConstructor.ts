@@ -1,7 +1,7 @@
-import moment from 'moment';
+import { Moment } from "moment";
 
-const epochConstructor = function (daysAgo: number): number {
-    let input = moment().subtract(daysAgo, 'days').hours(12).minutes(0).seconds(0).millisecond(0)
+const epochConstructor = function (today:Moment, daysAgo: number): number {
+    let input = today.subtract(daysAgo, 'days').hours(12).minutes(0).seconds(0).millisecond(0)
     switch (input.day()) {
         case 0: //sunday
             return input.subtract(2, 'days').valueOf()
