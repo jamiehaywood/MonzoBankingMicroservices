@@ -6,12 +6,14 @@ const getPercentageChanges = function (quotes: IStockQuotes): IPercentageChanges
     var isWeekend = ([0, 6].indexOf(new Date().getDay()) != -1);
     if (isWeekend) { return new Error("You can't check the stocks at the weekend!") }
 
+    let today = moment()
+
     let epochValues: IEpochValues = {
-        day: epochConstructor(1),
-        week: epochConstructor(7),
-        month: epochConstructor(28),
+        day: epochConstructor(today, 1),
+        week: epochConstructor(today, 7),
+        month: epochConstructor(today, 28),
         ytd: moment().month("January").date(2).hours(12).minutes(0).seconds(0).milliseconds(0).valueOf(),
-        year: epochConstructor(365)
+        year: epochConstructor(today, 365)
     }
 
     console.log(epochValues)
