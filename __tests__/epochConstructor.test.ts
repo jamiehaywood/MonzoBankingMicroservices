@@ -12,6 +12,11 @@ test('if Sun 7th July 2019 is input, epoch returned will be previous Friday at n
 });
 
 test('if Mon 8th July 2019 is input, epoch returned will be previous Friday at noon', () => {
-  let today = moment("07-07-2019", 'DD-MM-YYYY')
+  let today = moment("08-07-2019", 'DD-MM-YYYY')
+  expect(epochConstructor(today, 1)).toBe(1562324400000);
+});
+
+test('if Tue 9th July 2019 is input, epoch returned will be the Monday before at noon', () => {
+  let today = moment("06-07-2019", 'DD-MM-YYYY')
   expect(epochConstructor(today, 1)).toBe(1562324400000);
 });
