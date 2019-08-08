@@ -7,8 +7,6 @@ const epochConstructor = function (today:Moment, daysAgo: number): number {
             return input.subtract(2, 'days').valueOf()
         case 6: //saturday
             return input.subtract(1, 'days').valueOf()
-        case 1: //monday
-            return input.subtract(3, 'days').valueOf()
         default:
             return input.valueOf()
     }
