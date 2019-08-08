@@ -9,7 +9,7 @@
     "start:host": "func start",
     "start": "npm run start:host & npm run watch",
     "build:production": "npm run prestart && npm prune --production",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "azure-functions": "^1.0.2",
