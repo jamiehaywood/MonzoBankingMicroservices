@@ -1,7 +1,21 @@
 import request from 'request';
 import moment from 'moment';
 
-const bankHolidayCheck: Function = async function (): Promise<Boolean> {
+const bankHolidayCheck = async function (country: string): Promise<Boolean> {
+    switch (country) {
+        case "england":
+            country = "england-and-wales"
+            break;
+        case "wales":
+            country = "england-and-wales"
+            break;
+        case "scotland":
+            country = "scotland"
+            break;
+        default:
+            country = ""
+            break;
+    }
     let body = await new Promise<IHolidayEvent[]>((res, rej) => {
 
         var options = {
@@ -12,7 +26,7 @@ const bankHolidayCheck: Function = async function (): Promise<Boolean> {
 
         request(options, function (error, response, body) {
             if (!error && response.statusCode === 200) {
-                res(body["england-and-wales"].events)
+                res(body[country].events)
             }
             else {
                 rej(error)
